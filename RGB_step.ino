@@ -3,7 +3,9 @@ const int input = 8;  //pin input number
 const int pin_R = 5;  //pin outputs
 const int pin_G = 6;
 const int pin_B = 7;
-int first_min = 0;  //mins and maxes for the first step
+int off_min = 0;  //min setting for all LEDs off
+int off_max = 0;  //max setting for all LEDs off
+int first_min = off_max;  //mins and maxes for the first step
 int first_max = 0;
 int second_min = first_max;  //min of the second step is the max of the first step
 int second_max = 0;  //second step min
@@ -26,8 +28,14 @@ void setup()
 
 void loop()
 {
-  pulseVal = pulseIn(input, HIGH);  //read the pulsewidth of the input
-  if(pulseVal >= first_min && pulseVal <= first_max)  //if the pulsewidth is within the boundaries of the first step..
+  pulseVal = pulseIn(input, HIGH);  //read the pulsewidth of the input 
+  if(pulseVal == off_min && pulseVal <= off_max)  //if the pulsewidth is within the boundaries of the off step...
+  {
+    analogWrite(pin_R, 0);  //set these values for the colors
+    analogWrite(pin_G, 0);  //Choose values from 0 to 255
+    analogWrite(pin_B, 0);
+  }
+  if(pulseVal > first_min && pulseVal <= first_max)  //if the pulsewidth is within the boundaries of the first step...
   {
     analogWrite(pin_R, 87);  //set these values for the colors
     analogWrite(pin_G, 107);  //Choose values from 0 to 255
@@ -57,10 +65,10 @@ void loop()
     analogWrite(pin_G, 78);
     analogWrite(pin_B, 71);
   }
-  if(pulseVal > sixth_min && pulseVal <= sixth_max)
+  if(pulseVal > sixth_min && pulseVal == sixth_max)
   {
-    analogWrite(pin_R, 86);
-    analogWrite(pin_G, 82);
-    analogWrite(pin_B, 91);
+    analogWrite(pin_R, 255);
+    analogWrite(pin_G, 255);
+    analogWrite(pin_B, 255);
   }
 }
