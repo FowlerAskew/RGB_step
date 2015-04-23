@@ -1,3 +1,5 @@
+#include <SoftPWM.h>  //include the SoftPWM library
+#include <SoftPWM_timer.h>
 int pulseVal = 0;  //this variable stores the value from the reciever
 const int input = 8;  //pin input number
 const int pin_R = 5;  //pin outputs
@@ -19,9 +21,13 @@ int fifth_max = 2100;
 void setup()
 {
   pinMode(input, INPUT);  //declare inputs and outputs
-  pinMode(pin_R, OUTPUT);
-  pinMode(pin_G, OUTPUT);
-  pinMode(pin_B, OUTPUT);
+  SoftPWMBegin();
+  SoftPWMSet(Pin_R, 0);
+  SoftPWMSet(Pin_G, 0);
+  SoftPWMSet(Pin_B, 0);
+  SoftPWMSetFadeTime(Pin_R, 200, 200);
+  SoftPWMSetFadeTime(Pin_G, 200, 200);
+  SoftPWMSetFadeTime(Pin_B, 200, 200);
 }
 
 void loop()
@@ -29,44 +35,38 @@ void loop()
   pulseVal = pulseIn(input, HIGH);  //read the pulsewidth of the input 
   if(pulseVal == off_min && pulseVal <= off_max)  //if the pulsewidth is within the boundaries of the off step...
   {
-    analogWrite(pin_R, 0);  //set these values for the colors
-    analogWrite(pin_G, 0);  //Choose values from 0 to 255
-    analogWrite(pin_B, 0);
+    SoftPWMSet(pin_R, 0);  //set these values for the colors
+    SoftPWMSet(pin_G, 0);  //Choose values from 0 to 255
+    SoftPWMSet(pin_B, 0);
   }
   if(pulseVal > first_min && pulseVal <= first_max)  //if the pulsewidth is within the boundaries of the first step...
   {
-    analogWrite(pin_R, 87);  //set these values for the colors
-    analogWrite(pin_G, 107);  //Choose values from 0 to 255
-    analogWrite(pin_B, 127);
+    SoftPWMSet(pin_R, 87);  //set these values for the colors
+    SoftPWMSet(pin_G, 107);  //Choose values from 0 to 255
+    SoftPWMSet(pin_B, 127);
   }
   if(pulseVal > second_min && pulseVal <= second_max)  //same as the first block
   {
-    analogWrite(pin_R, 89);
-    analogWrite(pin_G, 74);
-    analogWrite(pin_B, 111);
+    SoftPWMSet(pin_R, 89);
+    SoftPWMSet(pin_G, 74);
+    SoftPWMSet(pin_B, 111);
   }
   if(pulseVal > third_min && pulseVal <= third_max)
   {
-    analogWrite(pin_R, 97);
-    analogWrite(pin_G, 105);
-    analogWrite(pin_B, 87);
+    SoftPWMSet(pin_R, 97);
+    SoftPWMSet(pin_G, 105);
+    SoftPWMSet(pin_B, 87);
   }
   if(pulseVal > fourth_min && pulseVal <= fourth_max)
   {
-    analogWrite(pin_R, 96);
-    analogWrite(pin_G, 82);
-    analogWrite(pin_B, 84);
+    SoftPWMSet(pin_R, 96);
+    SoftPWMSet(pin_G, 82);
+    SoftPWMSet(pin_B, 84);
   }
-  if(pulseVal > fifth_min && pulseVal <= fifth_max)
+  if(pulseVal > fifth_min && pulseVal == fifth_max)
   {
-    analogWrite(pin_R, 33);
-    analogWrite(pin_G, 78);
-    analogWrite(pin_B, 71);
-  }
-  if(pulseVal > sixth_min && pulseVal == sixth_max)
-  {
-    analogWrite(pin_R, 255);
-    analogWrite(pin_G, 255);
-    analogWrite(pin_B, 255);
+    SoftPWMSet(pin_R, 255);
+    SoftPWMSet(pin_G, 255);
+    SoftPWMSet(pin_B, 255);
   }
 }
