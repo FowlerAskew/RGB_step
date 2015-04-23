@@ -1,10 +1,10 @@
 #include <SoftPWM.h>  //include the SoftPWM library
 #include <SoftPWM_timer.h>
 int pulseVal = 0;  //this variable stores the value from the reciever
-const int input = 8;  //pin input number
-const int pin_R = 5;  //pin outputs
-const int pin_G = 6;
-const int pin_B = 7;
+const int input = 4;  //pin input number
+const int pin_R = 0;  //pin outputs
+const int pin_G = 1;
+const int pin_B = 2;
 int off_min = 900;  //min setting for all LEDs off
 int off_max = 1075;  //max setting for all LEDs off
 int first_min = off_max;  //mins and maxes for the first step
