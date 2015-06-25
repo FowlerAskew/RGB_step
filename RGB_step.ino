@@ -5,18 +5,7 @@ const int input = 4;  //pin input number
 const int pin_R = 0;  //pin outputs
 const int pin_G = 1;
 const int pin_B = 2;
-int off_min = 900;  //min setting for all LEDs off
-int off_max = 1075;  //max setting for all LEDs off
-int first_min = off_max;  //mins and maxes for the first step
-int first_max = 1325;
-int second_min = first_max;  //min of the second step is the max of the first step
-int second_max = 1500;  //second step max
-int third_min = second_max;  //same as the other steps
-int third_max = 1675;
-int fourth_min = third_max;
-int fourth_max = 1925;
-int fifth_min = fourth_max; 
-int fifth_max = 2100;
+
 
 void setup()
 {
@@ -32,6 +21,19 @@ void setup()
 
 void loop()
 {
+  int off_min = 900;  //min setting for all LEDs off
+  int off_max = 1075;  //max setting for all LEDs off
+  int first_min = off_max;  //mins and maxes for the first step
+  int first_max = 1325;
+  int second_min = first_max;  //min of the second step is the max of the first step
+  int second_max = 1500;  //second step max
+  int third_min = second_max;  //same as the other steps
+  int third_max = 1675;
+  int fourth_min = third_max;
+  int fourth_max = 1925;
+  int fifth_min = fourth_max; 
+  int fifth_max = 2100;
+
   pulseVal = pulseIn(input, HIGH);  //read the pulsewidth of the input 
   if(pulseVal == off_min && pulseVal <= off_max)  //if the pulsewidth is within the boundaries of the off step...
   {
