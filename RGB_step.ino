@@ -1,25 +1,61 @@
-#include <SoftPWM.h>  //include the SoftPWM library
-#include <SoftPWM_timer.h>
-int pulseVal = 0;  //this variable stores the value from the reciever
-const int input = 4;  //pin input number
-const int pin_R = 0;  //pin outputs
-const int pin_G = 1;
-const int pin_B = 2;
+/********************************************
+Code for LED Step Controller by Fowler Askew.
+Written with Pin Numbers for ATtiny 44/84.
+Use this code however you like.
 
+Uses code from jamesotron rgb_spectrum.c
+https://gist.github.com/jamesotron
+
+------------ MODE SELECT CODES: -------------
+Each switch = 1 if on, 0 if off.
+Sum of switches selects modes
+0 = Radio Control
+1 = mode 1, 2 = mode 2, etc.
+*********************************************/
+
+int pulseVal = 0;  //this variable stores the value from the reciever
+int modeVal = 0; //this variable selects the mode of the controller. 0 = RC, >1 = preprogrammed mode
+const int input = 9;  //pin input number
+const int Pin_R = 8;  //pin outputs
+const int Pin_G = 7;
+const int Pin_B = 6;
+int modeSelect[6];  //define an array to hold the values from mode selection switches
 
 void setup()
 {
-  pinMode(input, INPUT);  //declare inputs and outputs
-  SoftPWMBegin();
-  SoftPWMSet(Pin_R, 0);
-  SoftPWMSet(Pin_G, 0);
-  SoftPWMSet(Pin_B, 0);
-  SoftPWMSetFadeTime(Pin_R, 200, 200);
-  SoftPWMSetFadeTime(Pin_G, 200, 200);
-  SoftPWMSetFadeTime(Pin_B, 200, 200);
+  pinMode(input, INPUT);  //declare inputs and outputs. We only need to define inputs
+  for(int x = 0; x < 6; x++){
+    pinMode(x, INPUT);
+  }
+  for(int y = 0; y < 6; y++){
+    modeSelect[y] = digitalRead(y);
+  }
+  for(int z = 0; z < 6; z++){
+    modeVal = modeVal +modeSelect[z];
+  }
+  analogWrite(Pin_R, 0);
+  analogWrite(Pin_G, 0);
+  analogWrite(Pin_B, 0);
 }
 
 void loop()
+{
+  if (modeVal == 0){ RC(); }
+  else if (modeVal == 1){ mode1(); }
+  else if (modeVal == 2){ mode2(); }
+  else if (modeVal == 3){ mode3(); }
+  else if (modeVal == 4){ mode4(); }
+  else if (modeVal == 5){ mode5(); }
+  else if (modeVal == 6){ mode6(); }
+}
+
+void setColorRGB(unsigned int red, unsigned int green, unsigned int blue) {  //sets colors
+  analogWrite(Pin_R, red);
+  analogWrite(Pin_G, green);
+  analogWrite(Pin_B, blue);
+ }
+
+void RC()
 {
   int off_min = 900;  //min setting for all LEDs off
   int off_max = 1075;  //max setting for all LEDs off
@@ -37,38 +73,80 @@ void loop()
   pulseVal = pulseIn(input, HIGH);  //read the pulsewidth of the input 
   if(pulseVal == off_min && pulseVal <= off_max)  //if the pulsewidth is within the boundaries of the off step...
   {
-    SoftPWMSet(pin_R, 0);  //set these values for the colors
-    SoftPWMSet(pin_G, 0);  //Choose values from 0 to 255
-    SoftPWMSet(pin_B, 0);
+    setColorRGB(0, 0, 0);  //sets a value of 0 for each color
   }
   if(pulseVal > first_min && pulseVal <= first_max)  //if the pulsewidth is within the boundaries of the first step...
   {
-    SoftPWMSet(pin_R, 87);  //set these values for the colors
-    SoftPWMSet(pin_G, 107);  //Choose values from 0 to 255
-    SoftPWMSet(pin_B, 127);
+    setColorRGB(87, 107, 127);  //set red leds to 87, green to 107, and blue to 127
   }
   if(pulseVal > second_min && pulseVal <= second_max)  //same as the first block
   {
-    SoftPWMSet(pin_R, 89);
-    SoftPWMSet(pin_G, 74);
-    SoftPWMSet(pin_B, 111);
+    setColorRGB(89, 74, 111);
   }
   if(pulseVal > third_min && pulseVal <= third_max)
   {
-    SoftPWMSet(pin_R, 97);
-    SoftPWMSet(pin_G, 105);
-    SoftPWMSet(pin_B, 87);
+    setColorRGB(97, 105, 87);
   }
   if(pulseVal > fourth_min && pulseVal <= fourth_max)
   {
-    SoftPWMSet(pin_R, 96);
-    SoftPWMSet(pin_G, 82);
-    SoftPWMSet(pin_B, 84);
+    setColorRGB(96, 40, 80);
   }
   if(pulseVal > fifth_min && pulseVal == fifth_max)
   {
-    SoftPWMSet(pin_R, 255);
-    SoftPWMSet(pin_G, 255);
-    SoftPWMSet(pin_B, 255);
+    setColorRGB(255, 255, 255);
   }
+}
+
+void mode1()  //rainbow spectrum cycle
+{
+  // Start off with the LED off.
+  setColorRGB(0,0,0);
+
+while(1 == 1) {
+  unsigned int rgbColor[3];
+
+  // Start off with red.
+  rgbColor[0] = 255;
+  rgbColor[1] = 0;
+  rgbColor[2] = 0;  
+
+  // Choose the colors to increment and decrement.
+  for (int decColor = 0; decColor < 3; decColor += 1) {
+    int incColor = decColor == 2 ? 0 : decColor + 1;
+
+    // cross-fade the two colors.
+    for(int i = 0; i < 255; i += 1) {
+      rgbColor[decColor] -= 1;
+      rgbColor[incColor] += 1;
+      
+      setColorRGB(rgbColor[0], rgbColor[1], rgbColor[2]);
+      delay(5);
+    }
+  }
+}
+}
+
+void mode2()
+{
+  
+}
+
+void mode3()
+{
+  
+}
+
+void mode4()
+{
+  
+}
+
+void mode5()
+{
+  
+}
+
+void mode6()
+{
+  
 }
